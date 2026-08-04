@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The MOFD Studio</title>
+    <!-- Подключаем шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* В точности градиент с наброска */
+            background: linear-gradient(115deg, #02020a 0%, #080a2b 30%, #151b68 70%, #1f2aa6 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        /* Контейнер для золотых виющихся элементов из Canva */
+        .flames-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* SVG-элемент пламени/лепестка с искрящейся текстурой золота */
+        .gold-leaf {
+            position: absolute;
+            width: 110px;
+            height: 160px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+            opacity: 0.85;
+            animation: swayWind 8s infinite ease-in-out;
+        }
+
+        /* Анимация медленного, плавного покачивания от ветра */
+        @keyframes swayWind {
+            0% {
+                transform: rotate(0deg) scale(1) translateY(0px);
+            }
+            33% {
+                transform: rotate(6deg) scale(1.04) translateY(-12px);
+            }
+            66% {
+                transform: rotate(-5deg) scale(0.97) translateY(-5px);
+            }
+            100% {
+                transform: rotate(0deg) scale(1) translateY(0px);
+            }
+        }
+
+        /* Разные углы и задержки для чередования */
+        .leaf-1 {
+            top: 10%;
+            left: 5%;
+            transform-origin: bottom center;
+            animation-duration: 7s;
+        }
+
+        .leaf-2 {
+            top: 35%;
+            left: 12%;
+            transform: scale(0.85) rotate(15deg);
+            animation-duration: 9s;
+            animation-delay: -2s;
+        }
+
+        .leaf-3 {
+            bottom: 12%;
+            left: 6%;
+            transform: scale(1.1) rotate(-10deg);
+            animation-duration: 8s;
+            animation-delay: -4s;
+        }
+
+        .leaf-4 {
+            top: 5%;
+            right: 8%;
+            transform: scale(1.2) rotate(20deg);
+            animation-duration: 7.5s;
+            animation-delay: -1s;
+        }
+
+        .leaf-5 {
+            top: 28%;
+            right: 18%;
+            transform: scale(0.9) rotate(-15deg);
+            animation-duration: 10s;
+            animation-delay: -3s;
+        }
+
+        .leaf-6 {
+            bottom: 25%;
+            left: 38%;
+            transform: scale(0.8) rotate(10deg);
+            animation-duration: 8.5s;
+            animation-delay: -5s;
+        }
+
+        /* Основной контейнер сайта */
+        .main-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        /* Верхняя плашка / Шапка */
+        .header-banner {
+            width: 100%;
+            padding: 26px 30px;
+            background: linear-gradient(180deg, #62007d 0%, #440057 100%);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.2);
+            position: relative;
+        }
+
+        .header-title {
+            font-family: 'Lobster', 'Montserrat', cursive;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Сетка из 6 секций */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        /* Карточка секции */
+        .card {
+            aspect-ratio: 1.05 / 1;
+            background: linear-gradient(145deg, #6c0087 0%, #420058 100%);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        box-shadow 0.4s ease, 
+                        border-color 0.4s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.15);
+            color: #ffffff;
+            overflow: visible;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            transition: text-shadow 0.3s ease;
+        }
+
+        /* Увеличение квадрата при наведении */
+        .card:hover {
+            transform: scale(1.08) translateY(-6px);
+            border-color: #fff4b3;
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.45), 
+                        0 0 30px rgba(255, 215, 0, 0.35), 
+                        inset 0 0 20px rgba(255, 215, 0, 0.35);
+            z-index: 10;
+        }
+
+        .card:hover .card-title {
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.95), 0 0 22px rgba(255, 215, 0, 0.85);
+        }
+
+        /* Контейнер для золотых блесток вокруг квадрата */
+        .sparkles-container {
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            right: -25px;
+            bottom: -25px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: -1;
+        }
+
+        .card:hover .sparkles-container {
+            opacity: 1;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #ffffff 0%, #ffd700 60%, transparent 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 12px #ffd700, 0 0 22px #ffe885;
+            animation: sparklePulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes sparklePulse {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Адаптивность под мобильные телефоны и планшеты */
+        @media (max-width: 850px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .header-title {
+                font-size: 2.3rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .header-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Векторная графика ровно тех лепестков/пламени с золотой текстурой -->
+    <svg style="display: none;">
+        <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe993" />
+                <stop offset="30%" stop-color="#ffd700" />
+                <stop offset="70%" stop-color="#d49a18" />
+                <stop offset="100%" stop-color="#8a5a00" />
+            </linearGradient>
+            <pattern id="goldGlitter" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="3" r="1" fill="#fff" opacity="0.8"/>
+                <circle cx="12" cy="8" r="1.5" fill="#fff" opacity="0.9"/>
+                <circle cx="7" cy="15" r="1" fill="#ffe57f" opacity="0.7"/>
+                <circle cx="17" cy="17" r="1.2" fill="#fff" opacity="0.8"/>
+            </pattern>
+        </defs>
+    </svg>
+
+    <!-- Чередующиеся виющиеся лепестки по узору с эскиза -->
+    <div class="flames-container">
+        <!-- Лепесток 1 -->
+        <svg class="gold-leaf leaf-1" viewBox="0 0 100 150">
+            <path d="M 20 140 C 5 90, 45 60, 25 10 C 65 50, 45 100, 85 130 Z M 35 125 C 25 90, 50 65, 38 30 C 60 60, 48 95, 75 120 Z" fill="url(#goldGradient)" />
+        </svg>
+        <!-- Лепесток 2 -->
+        <svg class="gold-leaf leaf-2" viewBox="0 0 100 150">
+            <path d="M 30 140 C 10 80, 60 50, 40 10 C 75 55, 50 100, 90 135 Z M 40 120 C 25 80, 55 58, 45 28 C 68 62, 52 95, 78 118 Z" fill="url(#goldGradient)" />
+        </svg>
+        <!-- Лепесток 3 -->
+        <svg class="gold-leaf leaf-3" viewBox="0 0 100 150">
+            <path d="M 20 140 C 5 90, 45 60, 25 10 C 65 50, 45 100, 85 130 Z" fill="url(#goldGradient)" />
+        </svg>
+        <!-- Лепесток 4 -->
+        <svg class="gold-leaf leaf-4" viewBox="0 0 100 150">
+            <path d="M 30 140 C 10 80, 60 50, 40 10 C 75 55, 50 100, 90 135 Z" fill="url(#goldGradient)" />
+        </svg>
+        <!-- Лепесток 5 -->
+        <svg class="gold-leaf leaf-5" viewBox="0 0 100 150">
+            <path d="M 20 140 C 5 90, 45 60, 25 10 C 65 50, 45 100, 85 130 Z" fill="url(#goldGradient)" />
+        </svg>
+        <!-- Лепесток 6 -->
+        <svg class="gold-leaf leaf-6" viewBox="0 0 100 150">
+            <path d="M 30 140 C 10 80, 60 50, 40 10 C 75 55, 50 100, 90 135 Z" fill="url(#goldGradient)" />
+        </svg>
+    </div>
+
+    <div class="main-container">
+        <!-- Шапка Студии -->
+        <header class="header-banner">
+            <h1 class="header-title">The MOFD Studio</h1>
+        </header>
+
+        <!-- 6 секций -->
+        <main class="grid-container">
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Проект</span>
+            </div>
+            
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Части</span>
+            </div>
+
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Персонажи</span>
+            </div>
+
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Галерея</span>
+            </div>
+
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Авторы/Титры</span>
+            </div>
+
+            <div class="card">
+                <div class="sparkles-container"></div>
+                <span class="card-title">Будущие проекты</span>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Добавление анимированных блёсток вокруг квадратов при наведении
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            const sparklesContainer = card.querySelector('.sparkles-container');
+            const sparkleCount = 14;
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                // Расставляем блёстки по периметру
+                const side = Math.floor(Math.random() * 4);
+                let top, left;
+
+                if (side === 0) { // верх
+                    top = Math.random() * 15 - 10 + '%';
+                    left = Math.random() * 100 + '%';
+                } else if (side === 1) { // право
+                    top = Math.random() * 100 + '%';
+                    left = 90 + Math.random() * 15 + '%';
+                } else if (side === 2) { // низ
+                    top = 90 + Math.random() * 15 + '%';
+                    left = Math.random() * 100 + '%';
+                } else { // лево
+                    top = Math.random() * 100 + '%';
+                    left = Math.random() * 15 - 10 + '%';
+                }
+
+                sparkle.style.top = top;
+                sparkle.style.left = left;
+                
+                // Размеры и случайная задержка вспышек
+                const size = 5 + Math.random() * 7;
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                sparkle.style.animationDelay = `${Math.random() * 1.2}s`;
+                sparkle.style.animationDuration = `${0.8 + Math.random() * 0.8}s`;
+
+                sparklesContainer.appendChild(sparkle);
+            }
+        });
+    </script>
+</body>
+</html>
